@@ -1,0 +1,59 @@
+version: '3.8'
+services:
+  frontend:
+    build:
+      context: ./frontend  # Ensure context is the frontend folder
+      dockerfile: Dockerfile  # Ensure it's the correct name of the Dockerfile
+    ports:
+      - "80:5000"  # Adjust port mapping if necessary
+    networks:
+      - app-network
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./backend  # Ensure context is the backend folder
+      dockerfile: Dockerfile  # Ensure it's the correct name of the Dockerfile
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=grocery
+      - REDIS_HOST=localhost
+      - REDIS_PORT=6379
+    ports:
+      - "5000:5000"
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - app-network
+
+  postgres:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: grocery
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
