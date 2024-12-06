@@ -2,10 +2,10 @@ version: '3.8'
 services:
   frontend:
     build:
-      context: ./frontend  # Ensure context is the frontend folder
-      dockerfile: Dockerfile  # Ensure it's the correct name of the Dockerfile
+      context: ./frontend  
+      dockerfile: Dockerfile 
     ports:
-      - "80:5000"  # Adjust port mapping if necessary
+      - "80:5000"  
     networks:
       - app-network
     depends_on:
@@ -13,8 +13,8 @@ services:
 
   backend:
     build:
-      context: ./backend  # Ensure context is the backend folder
-      dockerfile: Dockerfile  # Ensure it's the correct name of the Dockerfile
+      context: ./backend  
+      dockerfile: Dockerfile 
     environment:
       - NODE_ENV=production
       - DB_HOST=postgres
